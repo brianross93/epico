@@ -1,29 +1,40 @@
+from archery import Archery
+from army import Army
+from bank import Bank
+from barracks import Barracks
+from market import Market
+from stable import Stable
+from building import Building
+
+
+turn_counter = 0
 
 
 
-
-class City:
-    def __init__(self, name, population, florins, bank, stable, archery, barracks, market, level):
+class City(Building):
+    
+    def __init__(self, name, population, florins, bank, stable, archery, barracks, market, level, debt):
+        Building.__init__(self, level, debt)
         self.name = name
         self.population = population
-        self.level = level
+        self.level = 1
         self.florins = florins
         self.buildings = list()
         self.bank = bank
         self.barracks = barracks
         self.archery = archery
         self.stable = stable
+        self.market = market
         self.army = []
-
+        self.debt = 0
+        
+        
     
 
     def add_buildings(self, building):
         self.buildings.append(building)
-
-    def add_money(self, amount):
-        added_florins = self.florins + amount
-        self.florins = added_florins
-        return added_florins
+   
+    
 
     def add_army(self, amount):
         self.army.append(amount)
@@ -49,76 +60,38 @@ class City:
         self.florins += amount
         return self.florins
     
-        
+    def calculate_debt(self, debt):
+        new_amount = self.florins - self.debt
+        self.florins = new_amount
+        return new_amount
+  
 
-class Army:
-    def __init__(self, horses, infantry, archers):
-        self.horses = horses
-        self.infantry = infantry
-        self.archers = archers
-
-
-class Stable():
-
-    def __init__(self, amount):
-        self.amount = amount
-    
-
-    def make_horses(self, amount):
-        
-        horse_army = Army(1000, 0, 0)
-        print(horse_army.horses)
-        return horse_army
-        #can potentially make this change based on population size and stuff
-
-
-
-class Barracks():
-    
-    def __init__(self, amount):
-        self.amount = amount
-    def make_soldiers(self, amount):
-        man_army = Army(0,1000,0)
-        print(man_army.infantry)
-        return man_army
-
-class Archery():
-
-    def __init__(self, amount):
-        self.amount = amount
-
-    def make_archers(self, amount):
-        shoot_army = Army(0, 0, 1000)
-        print(shoot_army)
-        return shoot_army
-
-class Bank():
-
-    def __init__(self, amount, interest):
-        self.amount = amount
-        self.interest = interest
-
-class Market():
-
-    def __init__(self, economy):
-        self.economy = economy
-    
-
-
-
-class Magistrate:
+class Magistrate():
     def __init__(self, name):
         self.name = name
 
+class Rival(City):
 
 
-# (self, name, population, florins, bank, stable, archery, barracks, market, level):
+    def trade(self, amount):
+        self.florins += amount
 
-Epico = City("Epico", 10000, 1000, Bank(1000, 1.5), Stable(1000), Archery(1000), Barracks(1000), Market(500), 1 )
+
+
+
+# (self, name, population, florins, bank, stable, archery, barracks, market, level, debt):
+
+Epico = City("Epico", 10000, 1000, Bank(1,0), Stable(1,0), Archery(1,0), Barracks(1,0), Market(500, 1,0), 1,1)
 army = Army(1000,1000,1000)
 Epico.add_army(army)
-print(Epico.army)
+print(army.horses)
 Epico.add_buildings(Bank)
-Epico.add_money(1000)
-Epico.add_infantry(1000)
+Epico.market.add_money(1000)
+Epico.market.expand(Epico.market.level)
+print(Epico.florins)
+print(Epico.market.level)
+Epico.calculate_debt(Epico.debt)
+print(Epico.florins)
+
+
 
